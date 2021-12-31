@@ -1,0 +1,160 @@
+###########################  Iro.js  ###########################
+#|                                                            |#
+#|  Press Ctrl + S to save                                    |#
+#|  Documents are saved to LocalStorage                       |#
+#|  Matches cannot span lines                                 |#
+#|  All matches must be contained by a single group ( ... )   |#
+#|  Look aheads are allowed (?= or (?!                        |#
+#|  Look behinds are not allowed, (?<= or (?<!                |#
+#|  The \= format allows unescaped regular expressions        |#
+#|  Constants are defined as __my_const = (......)            |#
+#|  Constants can be referenced with $${__my_const}           |#
+#|  Constants can reference other constants                   |#
+#|                                                            |#
+################################################################
+
+name						 = mysample
+file_extensions []			 = mysample;
+
+########################### Constants ##########################
+
+__MY_CONSTANT				\= (\b[a-z][a-z0-9]*)
+
+######################### Parse contexts #######################
+
+contexts [] {
+
+# Entry point
+main : context {
+
+	: pattern {
+		regex				\= $${__MY_CONSTANT}
+		styles []			 = .keyword;
+	}
+	
+	: include "numeric" ;
+	
+	: inline_push {
+		regex				\= (\{)
+		styles []			 = .punctuation;
+		: pop {  
+			regex			\= (\})
+			styles []		 = .punctuation;
+		}
+		: include "main" ;
+	}
+	
+	: pattern {
+		regex				\= (;)
+		styles []			 = .punctuation;
+	}
+	
+	: inline_push {
+		regex				\= (\")
+		styles []			 = .punctuation;
+		default_style		 = .text
+		: pop {
+			regex			\= (\")
+			styles []		 = .punctuation;
+		}
+	}
+	
+	: inline_push {
+		regex				\= (\()
+		styles []			 = .punctuation;
+		: pop {
+			regex			\= (\))
+			styles []		 = .punctuation;
+		}
+		: include "numeric" ;
+		: pattern {
+			regex			\= (,)
+			styles []		 = .punctuation;
+		}
+	}
+	
+	: include "multi_line_comment" ;
+	
+	: pattern {
+		regex				\= (//.*)
+		styles []			 = .comment;
+	}
+	
+	: pattern {
+		regex				\= ([^\s])
+		styles []			 = .illegal;
+	}
+	
+}
+
+numeric : context {
+	: pattern {
+		regex				\= (\b\d+)
+		styles []			 = .numeric;
+	}
+}
+
+multi_line_comment : context {
+	: inline_push {
+		regex				\= (/\*)
+		styles []		 	 = .comment;
+		default_style		 = .comment
+		: pop {
+			regex			\= (\*/)
+			styles []		 = .comment;
+		}
+	}
+}
+	
+}
+
+
+############################ Styles ############################
+
+styles [] {
+
+.comment : style {
+	color					 = light_green
+	italic					 = true
+	ace_scope				 = comment
+	textmate_scope			 = comment
+	pygments_scope			 = Comment
+}
+
+.keyword : style {
+	color					 = cyan
+	ace_scope				 = keyword
+	textmate_scope			 = keyword
+	pygments_scope			 = Keyword
+}
+
+.numeric : style {
+	color					 = gold
+	ace_scope				 = constant.numeric
+	textmate_scope 			 = constant.numeric
+	pygments_scope 			 = Number
+}
+
+.punctuation : style {
+	color					 = red_2
+	ace_scope				 = punctuation
+	textmate_scope			 = punctuation
+	pygments_scope			 = Punctuation
+}
+
+.text : style {
+	color					 = brown
+	ace_scope	 	 		 = string
+	textmate_scope 			 = string
+	pygments_scope 			 = String
+}
+
+.illegal : style {
+	color					 = white
+	background_color		 = red
+	ace_scope				 = invalid
+	textmate_scope 			 = invalid
+	pygments_scope 			 = Generic.Error
+}
+
+}
