@@ -1,0 +1,48 @@
+@use "common.scss" as *;
+
+[role="tablist"] {
+    border-bottom: 1px solid var(--tabby-border);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+[role="tablist"] * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@media (min-width: 30em) {
+    [role="tablist"] li {
+        height: 100%;
+        display: inline-table;
+    }
+}
+[role="tab"],
+[role="tablist"] > li > a {
+    display: block;
+    padding: 0 1em;
+    text-decoration: none;
+    color: #fff;
+    outline: 0 !important;
+}
+
+@media (min-width: 30em) {
+    [role="tab"],
+    [role="tablist"] > li > a {
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
+
+[role="tab"][aria-selected="true"] {
+    background-color: $active;
+}
+
+[role="tab"]:hover:not([aria-selected="true"]) {
+    background-color: $hover;
+}
+
+[hidden] {
+    display: none;
+}

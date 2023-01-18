@@ -1,0 +1,19 @@
+execute "song";
+
+group {
+   execute 1;
+   execute 2;
+   // This is a comment
+   print "hello";
+   
+   /* This 
+   is 
+   a 
+   multiline
+   comment */
+   a (1,2,3);
+   a;
+   group {
+   
+   }
+}
