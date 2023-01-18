@@ -14,7 +14,7 @@ const config = {
     input: "src/main.js",
     output: {
         format: "iife",
-        file: "public/bundle.js",
+        file: "public/build/bundle.js",
         sourcemap: true,
         globals: {
             "split.js": "Split",
@@ -31,7 +31,7 @@ const config = {
             watch: "src/style/*.scss",
         }),
         sourcemaps(),
-        nodeResolve(),
+        nodeResolve({ browser: true }),
         commonjs(),
         string({ include: "src/sample.*" }),
         production && terser(),

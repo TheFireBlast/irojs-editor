@@ -6,7 +6,7 @@
 
 import Split from "split.js";
 import Tabby from "tabbyjs";
-import * as Iro from "./irojs/index";
+import * as iro from "irojs";
 
 import sampleGrammar from "./sample.iro";
 import samplePreview from "./sample.txt";
@@ -31,6 +31,12 @@ var panes = Split(["#left", "#right"], {
 var tabs = new Tabby("#tabs");
 window["panes"] = panes;
 window["tabs"] = tabs;
+
+function openHelp() {
+    window.open("https://web.archive.org/web/20191007073218/https://eeyo.io/iro/documentation/index.html", "_blank");
+}
+document.querySelector("#toolbar .help").addEventListener("click", openHelp);
+document.querySelector("#toolbar .help").addEventListener("auxclick", openHelp);
 
 /**
  * @param {string} id
@@ -59,7 +65,6 @@ document.addEventListener("keydown", (e) => {
         save();
     }
 });
-document.querySelector("#toolbar .save").addEventListener("click", save);
 var saveAnimation;
 const saveSaveIcon = document.querySelector("#toolbar .save .la-save");
 const saveCheckIcon = document.querySelector("#toolbar .save .la-check");
@@ -91,6 +96,7 @@ function restore() {
             projects.set(p, [localStorage.getItem(p + ":editor"), localStorage.getItem(p + ":sample")]);
         }
     }
+    editorChangeIgnore = true;
     editor.setValue(projects.get("main")[0], -1);
     editor.session.getUndoManager().reset();
     editor.session.setAnnotations();
@@ -129,7 +135,12 @@ function setStatus(status) {
     }
 }
 
-editor.on("change", () => {
+var editorChangeIgnore = false;
+editor.on("change", (e) => {
+    if (editorChangeIgnore) {
+        editorChangeIgnore = false;
+        return;
+    }
     setStatus(Status.InProgress);
     clearTimeout(changedTimeout);
     changedTimeout = setTimeout(compile, config.compile_delay);
@@ -145,7 +156,7 @@ var errorMarkers = [];
 function compile() {
     try {
         // var currentTab = document.querySelector('#tabs a[aria-selected="true"]').attributes.href.value;
-        var result = Iro.compile(editor.getValue(), { textmate: true, ace: true });
+        var result = iro.compile(editor.getValue(), { targets: ["textmate", "ace"] });
         editor.session.clearAnnotations();
         editor.session.setAnnotations(
             result.errors.map((e) => ({

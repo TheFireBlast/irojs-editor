@@ -1494,6 +1494,7 @@ define(
 		var RionHighlightRules = require("./rion_highlight_rules").RionHighlightRules;
 		var Mode = function() {
 			this.HighlightRules = RionHighlightRules;
+         this.$behaviour = this.$defaultBehaviour;
 		};
 		oop.inherits(Mode, TextMode);
 		(function() {
