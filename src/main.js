@@ -69,8 +69,7 @@ var saveAnimation;
 const saveSaveIcon = document.querySelector("#toolbar .save .la-save");
 const saveCheckIcon = document.querySelector("#toolbar .save .la-check");
 function save() {
-    //TODO: get version from package.json
-    localStorage.setItem("version", WEBVERSION);
+    localStorage.setItem("version", EDITORVERSION);
     for (let [prj, data] of projects.entries()) {
         localStorage.setItem(prj + ":editor", editor.getValue());
         localStorage.setItem(prj + ":sample", tab_preview.getValue());

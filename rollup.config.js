@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
@@ -8,6 +10,9 @@ import autoprefixer from "autoprefixer";
 import { terser } from "rollup-plugin-terser";
 
 const production = !process.env.ROLLUP_WATCH;
+
+let IROVERSION = JSON.parse(fs.readFileSync(path.join(__dirname, "node_modules/irojs/package.json")))["version"];
+let EDITORVERSION = JSON.parse(fs.readFileSync(path.join(__dirname, "package.json")))["version"];
 
 /**@type {import("rollup").RollupOptions} */
 const config = {
@@ -22,7 +27,7 @@ const config = {
             nearley: "nearley",
             moo: "moo",
         },
-        intro: 'const IROVERSION="0.1.0", WEBVERSION="0.1.0";',
+        intro: `const IROVERSION=${JSON.stringify(IROVERSION)}, EDITORVERSION=${JSON.stringify(EDITORVERSION)};`,
     },
     external: ["split.js", "tabbyjs", "nearley", "moo"],
     plugins: [
