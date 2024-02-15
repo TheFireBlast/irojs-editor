@@ -11,7 +11,7 @@
     "deploy": "npx gh-pages -d public/"
   },
   "dependencies": {
-    "irojs": "^0.1.1",
+    "irojs": "latest",
     "plist2": "^1.1.3"
   },
   "devDependencies": {
