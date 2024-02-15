@@ -36,6 +36,9 @@ jobs:
           node-version: 21
           cache: 'pnpm'
 
+      - name: Update irojs
+        run: pnpm up irojs
+
       - name: Install dependencies
         run: pnpm install
 
