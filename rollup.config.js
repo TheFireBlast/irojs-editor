@@ -7,7 +7,7 @@ import { string } from "rollup-plugin-string";
 import scss from "rollup-plugin-scss";
 import postcss from "postcss";
 import autoprefixer from "autoprefixer";
-import { terser } from "rollup-plugin-terser";
+import { terser } from "@rollup/plugin-terser";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -34,6 +34,7 @@ const config = {
         scss({
             processor: () => postcss([autoprefixer()]),
             watch: "src/style/*.scss",
+            fileName: "bundle.css"
         }),
         sourcemaps(),
         nodeResolve({ browser: true }),
